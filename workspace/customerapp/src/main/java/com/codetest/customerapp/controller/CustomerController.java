@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,10 +21,12 @@ public class CustomerController {
 	private CustomerService customerService;
 	
 	@RequestMapping(value = "/customer/add" , method = RequestMethod.POST)
-	public String addCustomer(@Valid @ModelAttribute("customer") Customer customer, BindingResult bindingResult){
-		
+	public String addCustomer(Model model, @Valid Customer customer ,BindingResult bindingResult){
+		model.addAttribute("customer", customer);
 		//Validation
 		if(bindingResult.hasErrors()){
+			model.addAttribute("listCustomer" , this.customerService.listCustomers());
+			model.addAttribute("enumDepartment", Department.values());
 			return "customerView";
 		}
 		
